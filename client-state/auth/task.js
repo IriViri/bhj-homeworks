@@ -6,32 +6,31 @@ const signin = document.querySelector('.signin');
 const visForm = () => {
     signin.classList.add('signin_active');
 };
-window.onload = visForm;
+
 
 const form = document.getElementById('signin__form');
 form.addEventListener('submit',  (e) => {
+    e.preventDefault();
     let formData = new FormData(form);
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/auth');
     xhr.responseType = 'json';
     xhr.send(formData);
-    xhr.onreadystatechange = function () {
-        if(xhr.readyState === 4) {
-            let request = xhr.response;
+    form.reset ();
+    xhr.addEventListener('load',() =>  {
+        
+            let xhrAnswer = xhr.response;
+            let id = xhrAnswer.user_id;
 
-            if (request['success'] != true) {
+            if (xhrAnswer.succes === false) {
                 alert('Вы ввели неправильный логин/пароль')
             } else {
-                localStorage.setItem('id_user', request['user_id']);
+                localStorage.setItem('id_user', id);
                 signin.classList.remove('signin_active');
                 user.classList.add('welcome_active');
-                userID.innerText = request['user_id'];
+                userID.innerText = localStorage.getItem('user_id');
 
             }
-        }
-    };
-    e.preventDefault();
-});
+        })
+    })
 
-let saveUserId = localStorage.getItem('id_user');
-console.log(saveUserId);

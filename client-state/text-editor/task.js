@@ -1,31 +1,8 @@
-const editor = document.getElementById('editor');
-const clearKey = document.getElementById('clearKey');
-const clearAll = document.getElementById('clearAll');
-
-editor.addEventListener('input', saveText);
-window.addEventListener('load', printTextFromLocalStorage);
-clearKey.addEventListener('click', clear);
-clearAll.addEventListener('click', clear);
-
-function saveText(event) {
-    localStorage.text = editor.value;
+const textEditor = document.getElementById('editor');
+const saveText = localStorage.getItem('text');
+if (saveText !== null) {
+    textEditor.value = saveText;
 }
-
-function printTextFromLocalStorage(event) {
-    if (localStorage.text) {
-        editor.value = localStorage.text;
-    }
-}
-
-function clear(event) {
-
-    event.preventDefault();
-
-    if (event.target === clearKey) {
-        localStorage.removeItem('text');
-        editor.value = '';
-    } else {
-        localStorage.clear();
-        editor.value = '';
-    }
-}
+textEditor.addEventListener('input', () => {
+    localStorage.setItem('text', editor.value);
+})
